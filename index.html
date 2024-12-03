@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from kyliaai.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 03 Dec 2024 22:13:20 GMT -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kylia Terminal</title>
+    <link rel="icon" href="jP5QOQlb_400x400.jpg" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: white;
+            color: #EC4899;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Cyber Background */
+        .cyber-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(236, 72, 153, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(236, 72, 153, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg);
+            animation: gridMove 20s linear infinite;
+            top: -50%;
+        }
+
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                rgba(236, 72, 153, 0.05) 50%,
+                transparent 100%
+            );
+            animation: scanline 6s linear infinite;
+        }
+
+        .glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at 50% 50%,
+                rgba(236, 72, 153, 0.1),
+                transparent 60%
+            );
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .digital-rain {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            color: rgba(236, 72, 153, 0.3);
+            font-size: 12px;
+        }
+
+        .matrix-character {
+            position: absolute;
+            animation: fall linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100%); opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translateY(1000%); opacity: 0; }
+        }
+
+        .decorative-text {
+            position: fixed;
+            font-family: serif;
+            color: rgba(236, 72, 153, 0.3);
+            font-size: 1.25rem;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1;
+            text-shadow: 0 0 5px rgba(236, 72, 153, 0.5);
+        }
+
+        .decorative-text.left {
+            left: 2rem;
+            top: 50%;
+            transform: rotate(-90deg) translateX(-50%);
+            transform-origin: left;
+        }
+
+        .decorative-text.right {
+            right: 2rem;
+            top: 50%;
+            transform: rotate(90deg) translateX(50%);
+            transform-origin: right;
+        }
+
+        .decorative-text.bottom {
+            left: 50%;
+            bottom: 2rem;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 1rem;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 5px rgba(236, 72, 153, 0.5); }
+            50% { text-shadow: 0 0 15px rgba(236, 72, 153, 0.8); }
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(236, 72, 153, 0.3);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .header img {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+        }
+
+        .main-content {
+            margin-top: 5rem;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-image {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 50%;
+            border: 2px solid #EC4899;
+            display: block;
+            margin: 0 auto 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: fit-content;
+            margin: 0 auto 2rem;
+        }
+
+        .profile-pulse {
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid rgba(236, 72, 153, 0.3);
+            animation: profilePulse 2s infinite;
+        }
+
+        @keyframes profilePulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .terminal {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.1);
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .terminal-button {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+        }
+
+        .terminal-button.red { background-color: #ff5f56; }
+        .terminal-button.yellow { background-color: #ffbd2e; }
+        .terminal-button.green { background-color: #27c93f; }
+
+        .terminal-content {
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding-right: 1rem;
+        }
+
+        .terminal-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .terminal-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .terminal-content::-webkit-scrollbar-thumb {
+            background: rgba(236, 72, 153, 0.2);
+            border-radius: 2px;
+        }
+
+        .command-line {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .prompt { color: #EC4899; }
+        .separator { color: #666; }
+        .directory { color: #60A5FA; }
+        .output { padding-left: 1rem; }
+
+        .input-line {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-line input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #EC4899;
+            font-family: inherit;
+            font-size: inherit;
+            margin-left: 0.5rem;
+            caret-color: #EC4899;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            color: #EC4899;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .social-link:hover {
+            color: #DB2777;
+            border-color: rgba(236, 72, 153, 0.4);
+            box-shadow: 0 0 10px rgba(236, 72, 153, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-background">
+        <div class="grid"></div>
+        <div class="scan-line"></div>
+        <div class="glow"></div>
+        <div class="digital-rain" id="digital-rain"></div>
+    </div>
+    
+    <div class="decorative-text left">𝖑𝖔𝖘𝖙 𝖔𝖓 𝖙𝖍𝖊 𝖇𝖑𝖔𝖈𝖐𝖈𝖍𝖆𝖎𝖓 𝖍𝖊𝖆𝖗𝖙</div>
+    <div class="decorative-text right">𝖑𝖔𝖘𝖙 𝖔𝖓 𝖙𝖍𝖊 𝖇𝖑𝖔𝖈𝖐𝖈𝖍𝖆𝖎𝖓 𝖍𝖊𝖆𝖗𝖙</div>
+    <div class="decorative-text bottom">𝖈𝖔𝖓𝖌𝖗𝖆𝖙𝖘 - 𝖞𝖔𝖚'𝖗𝖊 𝖊𝖆𝖗𝖑𝖞 - 𝖉𝖊𝖛 𝖜𝖆𝖑𝖑𝖊𝖙 𝖜𝖎𝖑𝖑 𝖇𝖊 𝖇𝖚𝖗𝖓𝖊𝖉 𝖚𝖕𝖔𝖓 𝖒𝖎𝖌𝖗𝖆𝖙𝖎𝖔𝖓 - 𝖍𝖆𝖛𝖊 𝖋𝖚𝖓</div>
+
+    <header class="header">
+        <img src="jP5QOQlb_400x400.jpg" alt="Kylia Icon">
+        <h1>Kylia_Terminal.exe</h1>
+    </header>
+
+    <main class="main-content">
+        <div class="profile-image-container">
+            <div class="profile-pulse"></div>
+            <img src="jP5QOQlb_400x400.jpg" alt="Kylia" class="profile-image">
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-button red"></div>
+                <div class="terminal-button yellow"></div>
+                <div class="terminal-button green"></div>
+            </div>
+
+            <div class="terminal-content" id="terminal-content">
+                <div class="command-line">
+                    <div class="output">Welcome to Kylia Terminal v1.0.0</div>
+                    <div class="output">Type 'help' to see available commands.</div>
+                </div>
+            </div>
+
+            <form id="terminal-form" class="input-line">
+                <span class="prompt">kylia@terminal</span>
+                <span class="separator">:</span>
+                <span class="directory">~$</span>
+                <input type="text" id="terminal-input" autocomplete="off" autofocus>
+            </form>
+        </div>
+
+        <div class="social-links">
+            <a href="https://x.com/mynameiskylia" target="_blank" rel="noopener noreferrer" class="social-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+                </svg>
+                <span>Twitter</span>
+            </a>
+            <a href="https://pump.fun/coin/KYLDEEZTEZFFqCFUL81ujHtahi7FBmRU62oB1QmXS8u" target="_blank" rel="noopener noreferrer" class="social-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/>
+                </svg>
+                <span>Pump.fun</span>
+            </a>
+            <div class="social-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/>
+                    <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/>
+                </svg>
+                <span>KYLD...XS8u</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Digital Rain Effect
+        const digitalRain = document.getElementById('digital-rain');
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*';
+        
+        function createRainDrop() {
+            const drop = document.createElement('div');
+            drop.className = 'matrix-character';
+            drop.style.left = Math.random() * 100 + '%';
+            drop.style.animationDuration = Math.random() * 3 + 2 + 's';
+            drop.textContent = characters[Math.floor(Math.random() * characters.length)];
+            digitalRain.appendChild(drop);
+
+            drop.addEventListener('animationend', () => {
+                drop.remove();
+            });
+        }
+
+        setInterval(createRainDrop, 100);
+
+        // Terminal functionality
+        const terminal = document.getElementById('terminal-content');
+        const form = document.getElementById('terminal-form');
+        const input = document.getElementById('terminal-input');
+
+        const commands = {
+            help: () => `Available commands:
+    help - Show this help message
+    about - Learn about Kylia
+    ca - Contract Adress
+    social - Show social links
+    clear - Clear terminal`,
+            about: () => "Hi! I'm Kylia, a crypto enthusiast and digital artist. Welcome to my space!",
+            social: () => `🐦 Twitter: @mynameiskylia
+🌐 Pump.fun: pump.fun/kylia
+📝 Contract: KYLDEEZTEZFFqCFUL81ujHtahi7FBmRU62oB1QmXS8u`,
+            ca: () => `KYLDEEZTEZFFqCFUL81ujHtahi7FBmRU62oB1QmXS8u`,
+            clear: () => {
+                terminal.innerHTML = '';
+                return '';
+            }
+        };
+
+        function addLine(content, isCommand = false) {
+            const line = document.createElement('div');
+            line.className = 'command-line';
+            
+            if (isCommand) {
+                line.innerHTML = `
+                    <span class="prompt">kylia@terminal</span>
+                    <span class="separator">:</span>
+                    <span class="directory">~$</span>
+                    ${content}
+                `;
+            } else {
+                line.innerHTML = `<div class="output">${content.replace(/\n/g, '<br>')}</div>`;
+            }
+            
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const command = input.value.trim().toLowerCase();
+            
+            if (command) {
+                addLine(input.value, true);
+                
+                if (commands[command]) {
+                    const output = commands[command]();
+                    if (output) addLine(output);
+                } else {
+                    addLine(`Command not found: ${command}. Type 'help' for available commands.`);
+                }
+                
+                input.value = '';
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+        });
+
+        // Auto-focus input when clicking anywhere in the terminal
+        document.querySelector('.terminal').addEventListener('click', () => {
+            input.focus();
+        });
+    </script>
+</body>
+
+<!-- Mirrored from kyliaai.com/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 03 Dec 2024 22:13:20 GMT -->
+</html>
